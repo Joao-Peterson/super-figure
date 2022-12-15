@@ -1,0 +1,103 @@
+{
+	"name": "super-figure",
+	"publisher": "peterson",
+	"displayName": "Super Figure",
+	"description": "Easily create/edit/paste vector and bitmap images into latex or markdown for ease note taking and writing",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.70.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onLanguage:markdown",
+		"onLanguage:tex",
+		"onLanguage:latex"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"configuration": {
+			"title": "Super Figure",
+			"properties": {
+				"super-figure.vectorFigureEditor": {
+					"type": "string",
+					"default": "",
+					"description": "Full path for a vector figure editor executable. Ex: /usr/bin/inkscape"
+				},
+				"super-figure.vectorFigureEditorArgs": {
+					"type": "string",
+					"default": "${file}",
+					"description": "Commands line argumments to be passed to the vector editing executable. Ex: ${file} --option=5"
+				},
+				"super-figure.vectorFileExt": {
+					"type": "string",
+					"default": "eps,svgz,pdf,ps,ai,odg",
+					"description": "List of file extensions to check for vector images"
+				},
+				"super-figure.vectorTemplate": {
+					"type": "string",
+					"default": "~/.config/super-figure/templates/template.svg",
+					"description": "File template for creating a vector figure that doesn't exist yet"
+				},
+				"super-figure.onVectorFileSave": {
+					"type": "string",
+					"default": "",
+					"description": "Callback command to when the opened figure is saved to disk. Ex: '/usr/bin/inkscape' --export-filename ${basename}.pdf"
+				},
+				"super-figure.bitmapFigureEditor": {
+					"type": "string",
+					"default": "",
+					"description": "Full path for a bitmap figure editor executable. Ex: /usr/bin/gimp"
+				},
+				"super-figure.bitmapFigureEditorArgs": {
+					"type": "string",
+					"default": "${file}",
+					"description": "Commands line argumments to be passed to the bitmap editing executable. Ex: ${file} --option=5"
+				},
+				"super-figure.bitmapFileExt": {
+					"type": "string",
+					"default": "png,jpeg,jpg,gif,tiff,bmp,xcf",
+					"description": "List of file extensions to check for bitmap images"
+				},
+				"super-figure.bitmapTemplate": {
+					"type": "string",
+					"default": "~/.config/super-figure/templates/template.xcf",
+					"description": "File template for creating a bitmap figure that doesn't exist yet"
+				},
+				"super-figure.filesToWatch": {
+					"type": "array",
+					"default": [],
+					"description": "Array that stores files to be watched. on*FileSave commands will be called for these."
+				}
+			}
+		},
+		"commands": [
+			{
+				"command": "super-figure.editFigure",
+				"title": "Edit figure"
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "yarn run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"pretest": "yarn run compile && yarn run lint",
+		"lint": "eslint src --ext ts",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.74.0",
+		"@types/glob": "^8.0.0",
+		"@types/mocha": "^10.0.1",
+		"@types/node": "16.x",
+		"@typescript-eslint/eslint-plugin": "^5.45.0",
+		"@typescript-eslint/parser": "^5.45.0",
+		"eslint": "^8.28.0",
+		"glob": "^8.0.3",
+		"mocha": "^10.1.0",
+		"typescript": "^4.9.3",
+		"@vscode/test-electron": "^2.2.0"
+	}
+}
