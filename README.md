@@ -1,7 +1,4 @@
 # super-figure
-
-![](banner.png)
-
 Super figure is a vscode extension that implements integration for Inkscape and Gimp as means to quickly launch and edit figures and see the results is your Latex or Markdown files.
 
 This extension is inspired by the work of [Gilles Castel](https://castel.dev/post/lecture-notes-2/) and his [Vim plugin](https://github.com/gillescastel/inkscape-figures). May his blog not had a good SEO, i wouldn't have found it and had this idea, unfortunately he passed away in July 2022, so i'm dedicating this work to him as a thanks and to show that even in our passing, our work will continue to inspire others and move knowledge and human kind forwards, because we rest on the shoulder's of giants, rest in peace Gilles.
@@ -410,7 +407,7 @@ The `Args` configurations and `onSave` commands, offer variables support, you ca
 
 # Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+* No bugs, yet...
 
 # Planned Features
 
