@@ -13,6 +13,46 @@ enum imageType{
 	bitmap
 }
 
+// edit any figure, dropdown pick selection
+export async function editFigure(editor: vscode.TextEditor, edit: vscode.TextEditorEdit, args: any[]){
+	let pick = await vscode.window.showQuickPick(
+		[
+			{
+				label: "Edit figure based on file extension.",
+				detail: "File selection: (figure.svg)"
+			},
+			{
+				label: "Edit Vector figure.",
+				detail: "File selection: (figure)"
+			},
+			{
+				label: "Edit Bitmap figure.",
+				detail: "File selection: (figure)"
+			}
+		],
+		{
+			title: "Select how you want to edit the figure"
+		}
+	);
+		
+	if(pick === undefined) return;
+		
+	switch(pick.label){
+		case "Edit figure based on file extension.":
+			editFigureExtension(editor, edit, args);
+			break;
+		case "Edit Vector figure.":
+			editVector(editor, edit, args);
+			break;
+		case "Edit Bitmap figure.":
+			editBitmap(editor, edit, args);
+			break;
+		
+		default:
+			return;
+	}
+}
+
 // edit vector figure
 export async function editVector(editor: vscode.TextEditor, edit: vscode.TextEditorEdit, args: any[]){
 	let template = vscode.workspace.getConfiguration("super-figure").get<string>("vectorTemplate");
@@ -36,7 +76,7 @@ export async function editBitmap(editor: vscode.TextEditor, edit: vscode.TextEdi
 }
 
 // edit figure based on file extension
-export async function editFigure(editor: vscode.TextEditor, edit: vscode.TextEditorEdit, args: any[]){	
+export async function editFigureExtension(editor: vscode.TextEditor, edit: vscode.TextEditorEdit, args: any[]){	
 	// grab selection
 	let file = editor.document.getText(editor.selection);
 
@@ -95,6 +135,11 @@ async function handleFigure(type: imageType, file: string, template: string | un
 		vscode.window.showErrorMessage(`No folders are opened. Cannot find files`);
 		return;
 	}
+	// if no filename
+	if(file.length == 0){
+		vscode.window.showErrorMessage(`Selected filename is null. Try giving it a name`);
+		return;
+	}
 
 	// if file is image and doesn't exists
 	let find = await vscode.workspace.findFiles(file, null, 1);
@@ -103,7 +148,7 @@ async function handleFigure(type: imageType, file: string, template: string | un
 			file = await createFromTemplate(type, file, template);
 		}
 		catch(e){
-			vscode.window.showWarningMessage(`${e}`);
+			// vscode.window.showWarningMessage(`${e}`);
 			return;
 		}
 	}

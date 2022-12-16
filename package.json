@@ -1,6 +1,6 @@
 {
 	"name": "super-figure",
-	"publisher": "peterson",
+	"publisher": "Peterson",
 	"displayName": "Super Figure",
 	"description": "Easily create/edit/paste vector and bitmap images into latex or markdown for ease note taking and writing",
 	"version": "0.0.1",
@@ -22,7 +22,7 @@
 			"properties": {
 				"super-figure.vectorFigureEditor": {
 					"type": "string",
-					"default": "",
+					"default": "/usr/bin/inkscape",
 					"description": "Full path for a vector figure editor executable. Ex: /usr/bin/inkscape"
 				},
 				"super-figure.vectorFigureEditorArgs": {
@@ -42,12 +42,12 @@
 				},
 				"super-figure.onVectorFileSave": {
 					"type": "string",
-					"default": "",
+					"default": "${executable} ${file} --export-area-page --export-dpi 300 --export-type=pdf --export-latex --export-filename ${dir}/${basename}.pdf",
 					"description": "Callback command to when the vector figure is saved to disk. Ex: '/usr/bin/inkscape' --export-filename ${basename}.pdf"
 				},
 				"super-figure.bitmapFigureEditor": {
 					"type": "string",
-					"default": "",
+					"default": "/usr/bin/gimp",
 					"description": "Full path for a bitmap figure editor executable. Ex: /usr/bin/gimp"
 				},
 				"super-figure.bitmapFigureEditorArgs": {
@@ -67,7 +67,7 @@
 				},
 				"super-figure.onBitmapFileSave": {
 					"type": "string",
-					"default": "",
+					"default": "${executable} -n -i -b '(let* ( (filename \"${file}\") (fileout \"${dir}/${basename}.png\") (image 0) (layer 0) ) (set! image (car (gimp-file-load RUN-NONINTERACTIVE filename filename))) (set! layer (car (gimp-image-merge-visible-layers image CLIP-TO-IMAGE))) (gimp-file-save RUN-NONINTERACTIVE image layer fileout fileout) (gimp-image-delete image) (gimp-quit 0))'",
 					"description": "Callback command to when the bitmap figure is saved to disk. Ex: '/usr/bin/inkscape' --export-filename ${basename}.pdf"
 				},
 				"super-figure.filesToWatch": {
@@ -80,15 +80,94 @@
 		"commands": [
 			{
 				"command": "super-figure.editFigure",
+				"category": "Super Figure",
 				"title": "Edit Figure"
 			},
 			{
+				"command": "super-figure.editFigureExtension",
+				"category": "Super Figure",
+				"title": "Edit Figure based on the file extension"
+			},
+			{
 				"command": "super-figure.editVector",
+				"category": "Super Figure",
 				"title": "Edit Vector figure"
 			},
 			{
 				"command": "super-figure.editBitmap",
+				"category": "Super Figure",
 				"title": "Edit Bitmap figure"
+			},
+			{
+				"command": "super-figure.insertLatexVectorFigure",
+				"category": "Super Figure",
+				"title": "Insert vector figure as latex snippet"
+			},
+			{
+				"command": "super-figure.insertLatexBitmapFigure",
+				"category": "Super Figure",
+				"title": "Insert bitmap figure as latex snippet"
+			},
+			{
+				"command": "super-figure.insertLatexPre",
+				"category": "Super Figure",
+				"title": "Insert latex required preamble"
+			},
+			{
+				"command": "super-figure.insertMarkdownVectorFigure",
+				"category": "Super Figure",
+				"title": "Insert vector figure as markdown snippet"
+			},
+			{
+				"command": "super-figure.insertMarkdownBitmapFigure",
+				"category": "Super Figure",
+				"title": "Insert bitmap figure as markdown snippet"
+			}
+		],
+		"menus": {
+			"commandPalette": [
+				{
+					"command": "super-figure.insertLatexVectorFigure",
+					"when": "editorLangId == tex || editorLangId == latex"
+				},
+				{
+					"command": "super-figure.insertLatexBitmapFigure",
+					"when": "editorLangId == tex || editorLangId == latex"
+				},
+				{
+					"command": "super-figure.insertLatexPre",
+					"when": "editorLangId == tex || editorLangId == latex"
+				},
+				{
+					"command": "super-figure.insertMarkdownVectorFigure",
+					"when": "editorLangId == markdown"
+				},
+				{
+					"command": "super-figure.insertMarkdownBitmapFigure",
+					"when": "editorLangId == markdown"
+				}
+			]
+		},
+		"keybindings": [
+			{
+				"command": "super-figure.insertLatexVectorFigure",
+				"key": "ctrl+alt+v",
+				"when": "editorLangId == tex || editorLangId == latex && editorTextFocus"
+			},
+			{
+				"command": "super-figure.insertLatexBitmapFigure",
+				"key": "ctrl+alt+b",
+				"when": "editorLangId == tex || editorLangId == latex && editorTextFocus"
+			},
+			{
+				"command": "super-figure.insertMarkdownVectorFigure",
+				"key": "ctrl+alt+v",
+				"when": "editorLangId == markdown && editorTextFocus"
+			},
+			{
+				"command": "super-figure.insertMarkdownBitmapFigure",
+				"key": "ctrl+alt+b",
+				"when": "editorLangId == markdown && editorTextFocus"
 			}
 		]
 	},

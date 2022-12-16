@@ -72,7 +72,7 @@ export class cacheFilesT{
 			// bitmap
 			else if(this.bitmaps.includes(ext)){
 				cmd = vscode.workspace.getConfiguration("super-figure").get<string>("onBitmapFileSave");
-				exe = vscode.workspace.getConfiguration("super-figure").get<string>("vitmapFigureEditor")!;
+				exe = vscode.workspace.getConfiguration("super-figure").get<string>("bitmapFigureEditor")!;
 			}
 			else{
 				return;
