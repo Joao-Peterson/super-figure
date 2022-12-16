@@ -5,13 +5,38 @@ import { log } from './log';
 import { exec } from 'child_process';
 import * as os from 'os';
 import { cacheFiles } from './cacheFiles';
+import { evaluateCommand } from './command';
+import { defaultDir } from './defaultFiles';
 
 enum imageType{
 	vector,
 	bitmap
 }
 
-export async function editFigure(editor: vscode.TextEditor, edit: vscode.TextEditorEdit, args: any[]){
+// edit vector figure
+export async function editVector(editor: vscode.TextEditor, edit: vscode.TextEditorEdit, args: any[]){
+	let template = vscode.workspace.getConfiguration("super-figure").get<string>("vectorTemplate");
+	if(template === undefined) return;
+	
+	log.info(`Editing vector figure: ${editor.document.getText(editor.selection)}`);
+
+	let file = editor.document.getText(editor.selection) + p.extname(template);
+	handleFigure(imageType.vector, file, template);
+}
+
+// edit bitmap figure
+export async function editBitmap(editor: vscode.TextEditor, edit: vscode.TextEditorEdit, args: any[]){
+	let template = vscode.workspace.getConfiguration("super-figure").get<string>("bitmapTemplate");
+	if(template === undefined) return;
+	
+	log.info(`Editing bitmap figure: ${editor.document.getText(editor.selection)}`);
+
+	let file = editor.document.getText(editor.selection) + p.extname(template);
+	handleFigure(imageType.bitmap, file, template);
+}
+
+// edit figure based on file extension
+export async function editFigure(editor: vscode.TextEditor, edit: vscode.TextEditorEdit, args: any[]){	
 	// grab selection
 	let file = editor.document.getText(editor.selection);
 
@@ -21,22 +46,16 @@ export async function editFigure(editor: vscode.TextEditor, edit: vscode.TextEdi
 	ext = ext.replace(".", "");
 	let vectors = vscode.workspace.getConfiguration("super-figure").get<string>("vectorFileExt");
 	let bitmaps = vscode.workspace.getConfiguration("super-figure").get<string>("bitmapFileExt");
-	let executable: string | undefined;
-	let executableArgs: string | undefined;
-
+	
 	// if vector
 	if(vectors?.includes(ext)){
 		img = imageType.vector;
-		log.info(`File: ${file} as vector file.`);				
-		executable = vscode.workspace.getConfiguration("super-figure").get<string>("vectorFigureEditor");
-		executableArgs = vscode.workspace.getConfiguration("super-figure").get<string>("vectorFigureEditorArgs");
+		log.info(`File: ${file} is vector file.`);				
 	}
 	// bitmaps
 	else if(bitmaps?.includes(ext)){
 		img = imageType.bitmap;
-		log.info(`File: ${file} as bitmap file.`);			
-		executable = vscode.workspace.getConfiguration("super-figure").get<string>("bitmapFigureEditor");
-		executableArgs = vscode.workspace.getConfiguration("super-figure").get<string>("bitmapFigureEditorArgs");
+		log.info(`File: ${file} is bitmap file.`);			
 	}
 	// none
 	else{
@@ -45,26 +64,78 @@ export async function editFigure(editor: vscode.TextEditor, edit: vscode.TextEdi
 		vscode.window.showErrorMessage(`File '${file}' could not be opened. File type is not a bitmap or vector file`);
 		return;
 	}
+
+	// select template
+	let template: string | undefined;
 	
+	// try looking for a template of same file extension
+	template = p.join(defaultDir(), "template." + ext);
+
+	// if not then use preferred template
+	if(!fs.existsSync(template)){
+		switch(img){
+			case imageType.bitmap:
+				template = vscode.workspace.getConfiguration("super-figure").get("bitmapTemplate");
+				break;
+	
+			case imageType.vector:
+				template = vscode.workspace.getConfiguration("super-figure").get("vectorTemplate");
+				break;
+		}
+	}
+	
+	// handle figure, create from template, launch editor
+	handleFigure(img, file, template);
+}
+
+// handle figure, create from template, launch editor
+async function handleFigure(type: imageType, file: string, template: string | undefined){
+	// if no folder opened
+	if(vscode.workspace.workspaceFolders === undefined){
+		vscode.window.showErrorMessage(`No folders are opened. Cannot find files`);
+		return;
+	}
+
 	// if file is image and doesn't exists
-	if(img != null && !fs.existsSync(p.resolve(file))){
+	let find = await vscode.workspace.findFiles(file, null, 1);
+	if(find.length == 0){
 		try {
-			file = await createFromTemplate(img, file);
+			file = await createFromTemplate(type, file, template);
 		}
 		catch(e){
 			vscode.window.showWarningMessage(`${e}`);
 			return;
 		}
 	}
+	// if exists
+	else{
+		file = find[0].path;	
+	}
 	
+	
+	let executable: string | undefined;
+	let executableArgs: string | undefined;
+
+	// select executable
+	switch(type){
+		case imageType.vector:
+			executable = vscode.workspace.getConfiguration("super-figure").get<string>("vectorFigureEditor");
+			executableArgs = vscode.workspace.getConfiguration("super-figure").get<string>("vectorFigureEditorArgs");
+			break;
+		case imageType.bitmap:
+			executable = vscode.workspace.getConfiguration("super-figure").get<string>("bitmapFigureEditor");
+			executableArgs = vscode.workspace.getConfiguration("super-figure").get<string>("bitmapFigureEditorArgs");
+			break;
+	}
+
 	// open it
 	try {
 		let cmd: string;
 		if(executable !== undefined && executableArgs !== undefined && executableArgs !== ""){
-			cmd = evaluateCommand('"' + executable + '"' + " " + executableArgs, file);
+			cmd = evaluateCommand('"' + executable + '"' + " " + executableArgs, file, executable);
 		}
 		else if(executable !== undefined){
-			cmd = evaluateCommand('"' + executable + '"', file);
+			cmd = evaluateCommand('"' + executable + '"', file, executable);
 		}
 		else{
 			log.info(`Error, could not launch vector editor`);
@@ -82,20 +153,10 @@ export async function editFigure(editor: vscode.TextEditor, edit: vscode.TextEdi
 	
 	// save it to cache
 	cacheFiles.insert(vscode.Uri.file(file));
-}
+} 
 
-async function createFromTemplate(img: imageType, file: string): Promise<string>{
-	// select template
-	let template: string | undefined;
-	switch(img){
-		case imageType.bitmap:
-			template = vscode.workspace.getConfiguration("super-figure").get("bitmapTemplate");
-			break;
-
-		case imageType.vector:
-			template = vscode.workspace.getConfiguration("super-figure").get("vectorTemplate");
-			break;
-	}
+// receives type of image, vector or bitmap, copies a template file to 'file' an return absolute path to 'file'
+async function createFromTemplate(img: imageType, file: string, template: string | undefined): Promise<string>{
 
 	let input: string;
 	// if template is valid
@@ -148,10 +209,3 @@ async function createFromTemplate(img: imageType, file: string): Promise<string>
 		throw new Error("No template was specified for 'super-figure.${img.toString()}Template' config");
 	}
 }	
-
-function evaluateCommand(command: string, file: string): string{
-	command = command.replace("${file}", file);
-	command = command.replace("${basename}", p.basename(file, p.extname(file)));
-	command = command.replace("${dir}", p.dirname(file));
-	return command.trim();
-}

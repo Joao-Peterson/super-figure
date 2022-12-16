@@ -2,6 +2,9 @@
 
 This is the README for your extension "super-figure". After writing up a brief description, we recommend including the following sections.
 
+Gimp export to png:
+* https://stackoverflow.com/questions/5794640/how-to-convert-xcf-to-png-using-gimp-from-the-command-line
+
 ## Features
 
 Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.

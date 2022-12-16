@@ -15,8 +15,12 @@ export function generateDefaultFiles(context: vscode.ExtensionContext){
 	}
 }
 
+export function defaultDir(){
+	return p.join(p.resolve(os.homedir()), "/.config/super-figure/templates/");
+}
+
 function createDefaultDir(context: vscode.ExtensionContext): string{
-	let dir = p.join(p.resolve(os.homedir()), "/.config/super-figure/templates/");
+	let dir = defaultDir();
 	try{
 		fs.mkdirSync(dir, {recursive: true});
 	}

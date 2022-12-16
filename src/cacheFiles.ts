@@ -1,6 +1,11 @@
 import * as vscode from 'vscode';
 import * as p from 'path';
+import * as fs from 'fs';
+import * as chokidar from 'chokidar';
 import { exec } from 'child_process';
+import { log } from './log';
+import { evaluateCommand } from './command';
+
 export let cacheFiles: cacheFilesT;
 
 export function cacheFilesInit(context: vscode.ExtensionContext){
@@ -8,7 +13,7 @@ export function cacheFilesInit(context: vscode.ExtensionContext){
 }
 
 export class cacheFilesT{
-	private watcher: vscode.FileSystemWatcher; 
+	private watcher: chokidar.FSWatcher; 
 	private cache: string[];
 	private vectors: string;
 	private bitmaps: string;
@@ -21,22 +26,11 @@ export class cacheFilesT{
 		this.cache = vscode.workspace.getConfiguration(
 			"super-figure", vscode.workspace.workspaceFolders![0]).get("filesToWatch")!;
 
-		this.watcher = vscode.workspace.createFileSystemWatcher(
-			new vscode.RelativePattern(vscode.workspace.workspaceFolders![0], "?"),
-			true,
-			false,
-			false
-		);
-
-		this.watcher.onDidDelete(this.onDelete);
-		this.watcher.onDidCreate(this.onSave);
+		this.watcher = chokidar.watch(this.cache);
+		this.watcher.on('all', onWatchEvent);
 
 		this.vectors = vscode.workspace.getConfiguration("super-figure").get<string>("vectorFileExt")!;
 		this.bitmaps = vscode.workspace.getConfiguration("super-figure").get<string>("bitmapFileExt")!;	
-	}
-
-	dispose(){
-		this.watcher.dispose();
 	}
 
 	pull(){
@@ -50,11 +44,15 @@ export class cacheFilesT{
 	}
 
 	insert(file: vscode.Uri){
-		this.cache.push(file.path);
-		this.push();
+		this.pull();
+		if(!this.cache.includes(file.path)){
+			this.cache.push(file.path);
+			this.watcher.add(file.path);
+			this.push();
+		}
 	}
 
-	private onSave(file: vscode.Uri){
+	onSave(file: vscode.Uri){
 		this.pull();
 		
 		let path = file.path;
@@ -64,41 +62,56 @@ export class cacheFilesT{
 			let ext = p.extname(path);
 			ext = ext.replace(".", "");
 			
-			let cmd: string;
+			let cmd: string | undefined;
+			let exe: string;
 			// vector
 			if(this.vectors.includes(ext)){
-				cmd = vscode.workspace.getConfiguration("super-figure").get<string>("onVectorFileSave")!;
+				cmd = vscode.workspace.getConfiguration("super-figure").get<string>("onVectorFileSave");
+				exe = vscode.workspace.getConfiguration("super-figure").get<string>("vectorFigureEditor")!;
 			}
 			// bitmap
 			else if(this.bitmaps.includes(ext)){
-				cmd = vscode.workspace.getConfiguration("super-figure").get<string>("onBitmapFileSave")!;
+				cmd = vscode.workspace.getConfiguration("super-figure").get<string>("onBitmapFileSave");
+				exe = vscode.workspace.getConfiguration("super-figure").get<string>("vitmapFigureEditor")!;
 			}
 			else{
 				return;
 			}
 
-			cmd = evaluateCommand(cmd, path);
-			exec(cmd);				
+			if(cmd !== undefined && cmd !== ""){
+				cmd = evaluateCommand(cmd, path, exe);
+				log.info(`Executing command onSave:'${cmd}' for file: '${path}'`);
+				exec(cmd);				
+			}
+			else{
+				log.info(`No command onSave was setup. File: '${path}'`);
+			}
 		}
 	}
 	
-	private onDelete(file: vscode.Uri){
+	onDelete(file: vscode.Uri){
 		this.pull();
-		
-		this.cache.filter((value: string, index: number, obj: string[]) => {
+
+		log.info(`Removing file :'${file.path}' from cache`);
+		this.cache = this.cache.filter((value: string, index: number, obj: string[]) => {
 			if(value === file.path)
 				return false;
 			else
 				return true;
 		});
 		
+		this.watcher.unwatch(file.path);
 		this.push();
 	}
 }
 
-function evaluateCommand(command: string, file: string): string{
-	command = command.replace("${file}", file);
-	command = command.replace("${basename}", p.basename(file, p.extname(file)));
-	command = command.replace("${dir}", p.dirname(file));
-	return command.trim();
+function onWatchEvent(eventName: 'add'|'addDir'|'change'|'unlink'|'unlinkDir', path: string, stats?: fs.Stats){
+	switch(eventName){
+		case 'change':
+			cacheFiles.onSave(vscode.Uri.file(path));
+			break
+		case 'unlink':
+			cacheFiles.onDelete(vscode.Uri.file(path));
+			break
+	}
 }

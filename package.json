@@ -38,12 +38,12 @@
 				"super-figure.vectorTemplate": {
 					"type": "string",
 					"default": "~/.config/super-figure/templates/template.svg",
-					"description": "File template for creating a vector figure that doesn't exist yet"
+					"description": "Preferred file template for creating a vector figure that doesn't exist yet. Will try to use a template of the same file extension first, then this"
 				},
 				"super-figure.onVectorFileSave": {
 					"type": "string",
 					"default": "",
-					"description": "Callback command to when the opened figure is saved to disk. Ex: '/usr/bin/inkscape' --export-filename ${basename}.pdf"
+					"description": "Callback command to when the vector figure is saved to disk. Ex: '/usr/bin/inkscape' --export-filename ${basename}.pdf"
 				},
 				"super-figure.bitmapFigureEditor": {
 					"type": "string",
@@ -63,7 +63,12 @@
 				"super-figure.bitmapTemplate": {
 					"type": "string",
 					"default": "~/.config/super-figure/templates/template.xcf",
-					"description": "File template for creating a bitmap figure that doesn't exist yet"
+					"description": "Preferred file template for creating a bitmap figure that doesn't exist yet. Will try to use a template of the same file extension first, then this"
+				},
+				"super-figure.onBitmapFileSave": {
+					"type": "string",
+					"default": "",
+					"description": "Callback command to when the bitmap figure is saved to disk. Ex: '/usr/bin/inkscape' --export-filename ${basename}.pdf"
 				},
 				"super-figure.filesToWatch": {
 					"type": "array",
@@ -75,7 +80,15 @@
 		"commands": [
 			{
 				"command": "super-figure.editFigure",
-				"title": "Edit figure"
+				"title": "Edit Figure"
+			},
+			{
+				"command": "super-figure.editVector",
+				"title": "Edit Vector figure"
+			},
+			{
+				"command": "super-figure.editBitmap",
+				"title": "Edit Bitmap figure"
 			}
 		]
 	},
@@ -88,16 +101,19 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.74.0",
 		"@types/glob": "^8.0.0",
 		"@types/mocha": "^10.0.1",
 		"@types/node": "16.x",
+		"@types/vscode": "^1.74.0",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
+		"@vscode/test-electron": "^2.2.0",
 		"eslint": "^8.28.0",
 		"glob": "^8.0.3",
 		"mocha": "^10.1.0",
-		"typescript": "^4.9.3",
-		"@vscode/test-electron": "^2.2.0"
+		"typescript": "^4.9.3"
+	},
+	"dependencies": {
+		"chokidar": "^3.5.3"
 	}
 }

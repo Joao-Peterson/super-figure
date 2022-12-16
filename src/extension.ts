@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
 import { cacheFiles, cacheFilesInit } from './cacheFiles';
 import { validateConfig } from './configValidate';
-import { editFigure } from './editFigure';
+import { editBitmap, editFigure, editVector } from './editFigure';
 import { log, logInit } from './log';
-import { generateDefaultFiles } from './template';
+import { generateDefaultFiles } from './defaultFiles';
 
 export function activate(context: vscode.ExtensionContext) {
 	
@@ -29,11 +29,19 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// ------------------------------------------------ Commands ------------------------------------------------
 
-	let disposable = vscode.commands.registerTextEditorCommand('super-figure.editFigure', editFigure);
+	let disposable: vscode.Disposable;
+
+	disposable = vscode.commands.registerTextEditorCommand('super-figure.editFigure', editFigure);
+	context.subscriptions.push(disposable);
+	
+	disposable = vscode.commands.registerTextEditorCommand('super-figure.editVector', editVector);
+	context.subscriptions.push(disposable);
+
+	disposable = vscode.commands.registerTextEditorCommand('super-figure.editBitmap', editBitmap);
 	context.subscriptions.push(disposable);
 
 }
 
 export function deactivate(){
-	cacheFiles.dispose();
+
 }
