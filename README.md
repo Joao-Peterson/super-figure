@@ -47,10 +47,10 @@ Some key features:
 * Keybindings
 
 Sample using Latex and Inkscape:
-![](sampleLatex.gif)
+![](images/latex.gif)
 
 Sample using Markdown and Gimp:
-![](sampleMarkdown.gif)
+![](images/markdown.gif)
 
 # Usage
 
