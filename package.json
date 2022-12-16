@@ -3,9 +3,9 @@
 	"publisher": "Peterson",
 	"displayName": "Super Figure",
 	"description": "Easily create/edit/paste vector and bitmap images into latex or markdown for ease note taking and writing. With out of the box support for Inkscape and Gimp",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"icon": "images/icon.png",
-	"license": "LICENSE",
+	"license": "SEE LICENSE IN LICENSE",
 	"homepage": "https://github.com/Joao-Peterson/super-figure",
 	"bugs": "https://github.com/Joao-Peterson/super-figure/issues",
 	"repository": {
