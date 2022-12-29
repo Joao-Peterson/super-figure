@@ -45,9 +45,9 @@ export class cacheFilesT{
 
 	insert(file: vscode.Uri){
 		this.pull();
-		if(!this.cache.includes(file.path)){
-			this.cache.push(file.path);
-			this.watcher.add(file.path);
+		if(!this.cache.includes(file.fsPath)){
+			this.cache.push(file.fsPath);
+			this.watcher.add(file.fsPath);
 			this.push();
 		}
 	}
@@ -55,7 +55,7 @@ export class cacheFilesT{
 	onSave(file: vscode.Uri){
 		this.pull();
 		
-		let path = file.path;
+		let path = file.fsPath;
 
 		// if marked
 		if(this.cache.includes(path)){
@@ -92,15 +92,15 @@ export class cacheFilesT{
 	onDelete(file: vscode.Uri){
 		this.pull();
 
-		log.info(`Removing file :'${file.path}' from cache`);
+		log.info(`Removing file :'${file.fsPath}' from cache`);
 		this.cache = this.cache.filter((value: string, index: number, obj: string[]) => {
-			if(value === file.path)
+			if(value === file.fsPath)
 				return false;
 			else
 				return true;
 		});
 		
-		this.watcher.unwatch(file.path);
+		this.watcher.unwatch(file.fsPath);
 		this.push();
 	}
 }
