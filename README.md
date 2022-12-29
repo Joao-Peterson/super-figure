@@ -33,6 +33,7 @@ This extension is inspired by the work of [Gilles Castel](https://castel.dev/pos
 - [Known Issues](#known-issues)
 - [Planned Features](#planned-features)
 - [Release Notes](#release-notes)
+	- [1.0.1](#101)
 	- [1.0.0](#100)
 
 # Features
@@ -416,6 +417,10 @@ The `Args` configurations and `onSave` commands, offer variables support, you ca
 * Hability to paste and drop files directly into vscode and generate the snippets accordingly, similar to the extension [Paste Image](https://github.com/mushanshitiancai/vscode-paste-image.git).
 
 # Release Notes
+
+## 1.0.1
+
+Bug fixes for Windows (path resolving related)
 
 ## 1.0.0
 

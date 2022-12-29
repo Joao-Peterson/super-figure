@@ -154,7 +154,7 @@ async function handleFigure(type: imageType, file: string, template: string | un
 	}
 	// if exists
 	else{
-		file = find[0].path;	
+		file = find[0].fsPath;	
 	}
 	
 	
@@ -227,13 +227,18 @@ async function createFromTemplate(img: imageType, file: string, template: string
 
 		// gettings absolute paths
 		// ~ is not expanded correctly by p.resolve()
-		input = input!.replace("~", os.homedir());
 		// check if folder is open, to get cwd
 		if(vscode.workspace.workspaceFolders === undefined) throw new Error("No folder is opened, therefore no relative files can be created");
 		// join relatives paths with workspace folder
-		let file_tmp = vscode.workspace.workspaceFolders![0].uri.path;
-		file_tmp = p.join(vscode.workspace.workspaceFolders![0].uri.path, file);
-		file = p.resolve(p.join(vscode.workspace.workspaceFolders![0].uri.path, file));
+		// let file_tmp = vscode.workspace.workspaceFolders![0].uri.path;
+		// file = p.join(vscode.workspace.workspaceFolders![0].uri.path, file);
+		let fileUri = vscode.Uri.joinPath(vscode.workspace.workspaceFolders![0].uri, file);
+
+		input = input!.replace("~", os.homedir());
+		let inputUri = vscode.Uri.parse(input);
+
+		input = inputUri.fsPath;
+		file = fileUri.fsPath;
 		
 		log.info(`Copying from: '${input}' to: '${file}'`);
 		try {
