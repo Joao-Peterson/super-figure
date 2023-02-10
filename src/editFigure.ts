@@ -177,10 +177,10 @@ async function handleFigure(type: imageType, file: string, template: string | un
 	try {
 		let cmd: string;
 		if(executable !== undefined && executableArgs !== undefined && executableArgs !== ""){
-			cmd = evaluateCommand('"' + executable + '"' + " " + executableArgs, file, executable);
+			cmd = evaluateCommand(executable + " " + executableArgs, file, executable);
 		}
 		else if(executable !== undefined){
-			cmd = evaluateCommand('"' + executable + '"', file, executable);
+			cmd = evaluateCommand(executable, file, executable);
 		}
 		else{
 			log.info(`Error, could not launch vector editor`);
