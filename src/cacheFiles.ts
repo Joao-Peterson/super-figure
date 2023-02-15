@@ -4,7 +4,8 @@ import * as fs from 'fs';
 import * as chokidar from 'chokidar';
 import { exec } from 'child_process';
 import { log } from './log';
-import { evaluateCommand } from './command';
+import { evaluateVars } from './vars';
+import { execCmd, imageType } from './launch';
 
 export let cacheFiles: cacheFilesT;
 
@@ -57,35 +58,37 @@ export class cacheFilesT{
 		
 		let path = file.fsPath;
 
-		// if marked
+		// if marked for watch
 		if(this.cache.includes(path)){
 			let ext = p.extname(path);
 			ext = ext.replace(".", "");
 			
-			let cmd: string | undefined;
-			let exe: string;
-			// vector
+			let type: imageType;
+
+			//get type
 			if(this.vectors.includes(ext)){
-				cmd = vscode.workspace.getConfiguration("super-figure").get<string>("onVectorFileSave");
-				exe = vscode.workspace.getConfiguration("super-figure").get<string>("vectorFigureEditor")!;
+				type = imageType.vector;
 			}
-			// bitmap
 			else if(this.bitmaps.includes(ext)){
-				cmd = vscode.workspace.getConfiguration("super-figure").get<string>("onBitmapFileSave");
-				exe = vscode.workspace.getConfiguration("super-figure").get<string>("bitmapFigureEditor")!;
+				type = imageType.bitmap;
 			}
 			else{
 				return;
 			}
 
-			if(cmd !== undefined && cmd !== ""){
-				cmd = evaluateCommand(cmd, path, exe);
-				log.info(`Executing command onSave:'${cmd}' for file: '${path}'`);
-				exec(cmd);				
+			// execute onSave
+			let ret: string;
+			try {
+				ret = execCmd(type, path);
+			} catch (error) {
+				if (typeof(error) == 'string'){
+					vscode.window.showErrorMessage(error);
+					log.info(error);
+					return;
+				}
 			}
-			else{
-				log.info(`No command onSave was setup. File: '${path}'`);
-			}
+
+			log.info(ret!);
 		}
 	}
 	
@@ -109,9 +112,9 @@ function onWatchEvent(eventName: 'add'|'addDir'|'change'|'unlink'|'unlinkDir', p
 	switch(eventName){
 		case 'change':
 			cacheFiles.onSave(vscode.Uri.file(path));
-			break
+			break;
 		case 'unlink':
 			cacheFiles.onDelete(vscode.Uri.file(path));
-			break
+			break;
 	}
 }

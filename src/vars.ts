@@ -1,6 +1,6 @@
 import * as p from 'path';
 
-export function evaluateCommand(command: string, file: string, exe: string): string{
+export function evaluateVars(command: string, file: string, exe: string): string{
 	command = command.replace("${file}", wrapQuotes(file));
 	command = command.replace("${basename}", wrapQuotes(p.basename(file, p.extname(file))));
 	command = command.replace("${dir}", wrapQuotes(p.dirname(file)));

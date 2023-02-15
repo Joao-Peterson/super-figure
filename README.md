@@ -16,6 +16,7 @@ This extension is inspired by the work of [Gilles Castel](https://castel.dev/pos
 		- [Gimp](#gimp)
 - [Commands](#commands)
 	- [Edit Figure (`super-figure.editFigure`)](#edit-figure-super-figureeditfigure)
+	- [Rename figure (`super-figure.renameFigure`)](#rename-figure-super-figurerenamefigure)
 	- [Edit Figure based on the file extension (`super-figure.editFigureExtension`)](#edit-figure-based-on-the-file-extension-super-figureeditfigureextension)
 	- [Edit Vector figure (`super-figure.editVector`)](#edit-vector-figure-super-figureeditvector)
 	- [Edit Bitmap figure (`super-figure.editBitmap`)](#edit-bitmap-figure-super-figureeditbitmap)
@@ -33,6 +34,7 @@ This extension is inspired by the work of [Gilles Castel](https://castel.dev/pos
 - [Known Issues](#known-issues)
 - [Planned Features](#planned-features)
 - [Release Notes](#release-notes)
+	- [1.0.2](#102)
 	- [1.0.1](#101)
 	- [1.0.0](#100)
 
@@ -43,8 +45,9 @@ This extension enables you to launch image files from Latex or Markdown directly
 Some key features:
 * Edit file externally with a simple command just by selecting the filepath!
 * Files will be crated based on a template if they not exist yet
-* Ready to go snippets for Latex and Markdown via command
+* Ready to go snippets for Latex and Markdown via commands
 * onSave commands for when extra work is needed after editing the file. Ex: Saving `svg` files to `pdf` and `tex` for latex.
+* Image file renaming
 * Keybindings
 
 Sample using Latex and Inkscape:
@@ -61,6 +64,7 @@ Two default keybindings are defined, for vector and bitmap editing, both work in
 
 * `ctrl+alt+v`: Insert Vector figure
 * `ctrl+alt+b`: Insert Bitmap figure
+* `ctrl+alt+r`: Rename figure
 
 ## Configuration
 
@@ -161,6 +165,30 @@ Launches a quick item selector on which you will be able to choose how you edit 
 * [Edit Figure based on the file extension](#edit-figure-based-on-the-file-extension-super-figureeditfigureextension)
 * [Edit Vector figure](#edit-vector-figure-super-figureeditvector)
 * [Edit Bitmap figure](#edit-bitmap-figure-super-figureeditbitmap)
+
+## Rename figure (`super-figure.renameFigure`)
+
+Renames a figure, and for that, just select your image name, like `images/figure1` in this examples:
+
+```tex
+\begin{figure}[ht]
+	\centering
+	\caption{}
+	%\incsvg{path/}{path/file}
+	\incsvg{images}{images/figure1}\\
+	\label{fig:sample}
+\end{figure}
+```
+
+```markdown
+![](images/figure1)
+```
+
+Then press the shortcut `ctrl+alt+r` or open up the command palette and go for the command `Rename`. 
+
+**You might be prompted to select the exact file**, since the extension cannot guess the extension if multiple file with the same name and different extension might exist.
+
+After that input the new file name and boom, the text will be updated, the file will be renamed, if applicable the `onSave` command will be executed accordingly, regenerating files, and finally the file will be put in the watch list, in which the `onSave` command will be executed might the file be modified externally.
 
 ## Edit Figure based on the file extension (`super-figure.editFigureExtension`)
 
@@ -417,6 +445,10 @@ The `Args` configurations and `onSave` commands, offer variables support, you ca
 * Hability to paste and drop files directly into vscode and generate the snippets accordingly, similar to the extension [Paste Image](https://github.com/mushanshitiancai/vscode-paste-image.git).
 
 # Release Notes
+
+## 1.0.2
+
+Bug fixes and a rename feature
 
 ## 1.0.1
 

@@ -50,7 +50,7 @@
 				},
 				"super-figure.vectorFileExt": {
 					"type": "string",
-					"default": "eps,svgz,pdf,ps,ai,odg",
+					"default": "svg,eps,svgz,ps,ai,dwg",
 					"description": "List of file extensions to check for vector images"
 				},
 				"super-figure.vectorTemplate": {
@@ -100,6 +100,11 @@
 				"command": "super-figure.editFigure",
 				"category": "Super Figure",
 				"title": "Edit Figure"
+			},
+			{
+				"command": "super-figure.renameFigure",
+				"category": "Super Figure",
+				"title": "Rename Figure"
 			},
 			{
 				"command": "super-figure.editFigureExtension",
@@ -167,6 +172,11 @@
 			]
 		},
 		"keybindings": [
+			{
+				"command": "super-figure.renameFigure",
+				"key": "ctrl+alt+r",
+				"when": "editorTextFocus"
+			},
 			{
 				"command": "super-figure.insertLatexVectorFigure",
 				"key": "ctrl+alt+v",

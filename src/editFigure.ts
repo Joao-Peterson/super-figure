@@ -5,13 +5,12 @@ import { log } from './log';
 import { exec } from 'child_process';
 import * as os from 'os';
 import { cacheFiles } from './cacheFiles';
-import { evaluateCommand } from './command';
+import { evaluateVars } from './vars';
 import { defaultDir } from './defaultFiles';
-
-enum imageType{
-	vector,
-	bitmap
-}
+import { findFileWorkspace, getFullpath, getPathRelativeToWorkspace, pathWithoutExt } from './pathUtils';
+import { execCmd, getTypeByExtension, imageType, launch } from './launch';
+import path = require('path');
+import { join } from 'path';
 
 // edit any figure, dropdown pick selection
 export async function editFigure(editor: vscode.TextEditor, edit: vscode.TextEditorEdit, args: any[]){
@@ -50,6 +49,135 @@ export async function editFigure(editor: vscode.TextEditor, edit: vscode.TextEdi
 		
 		default:
 			return;
+	}
+}
+
+export async function renameFigure(editor: vscode.TextEditor, edit: vscode.TextEditorEdit, args: any[]){
+	// if no folder opened
+	if(vscode.workspace.workspaceFolders === undefined){
+		vscode.window.showErrorMessage(`No folders are opened. Cannot find files`);
+		return;
+	}
+
+	let file = editor.document.getText(editor.selection);
+
+	// if no filename
+	if(file.length == 0){
+		vscode.window.showErrorMessage(`Selected filename is null. Try giving it a name`);
+		return;
+	}
+	
+	// try {
+	// 	edit.delete(editor.selection);
+	// } catch (error) {
+	// 	if(error instanceof Error){
+	// 		log.info(error.message);
+	// 	}				
+	// }
+
+	let oldFile: string; 
+	try {
+		// if file is image and doesn't exists
+		oldFile = await findFileWorkspace(file);
+
+		// get oldFile
+		log.info(`Renaming file, match found for selection: "${file}". Match: "${oldFile}"`);
+
+	} catch (error) {
+		if (typeof(error) == "string"){
+			vscode.window.showErrorMessage(error);
+			return;
+		}
+	}
+
+	// prompt user
+	let inputRes = vscode.window.showInputBox(
+		{
+			value: "",
+			title: `Rename file ${oldFile!} to:`
+		}
+	);
+
+	// get new name
+	let newFile: string;
+	await inputRes.then((value) => {
+		// on ESC
+		if(value === undefined){
+			return;
+		} 
+		else{
+			newFile = value;
+		}
+	});
+
+	// substitute selection
+	await editor.edit(edit => {
+		try {
+			edit.delete(editor.selection);
+			edit.insert(editor.selection.start, pathWithoutExt(newFile!));
+		} catch (error) {
+			if(error instanceof Error){
+				log.info(error.message);
+			}	
+		}
+	});
+	
+	// rename file
+	try {
+		fs.copyFileSync(getFullpath(oldFile!), getFullpath(newFile!));
+		log.info(`File renamed to: '${newFile!}'`);
+	} catch (error) {
+		if(typeof(error) == "string"){
+			vscode.window.showErrorMessage(`Error renaming file: '${oldFile!}' to '${newFile!}'`);
+			log.info(`Error renaming file: '${oldFile!}' to '${newFile!}'`);
+		}	
+	}
+
+	// re gen
+	let type: imageType = getTypeByExtension(oldFile!);
+	let ret: string | undefined;
+	try {
+		log.info(`Regenerating files`);
+		ret = execCmd(type, getFullpath(newFile!));
+	} catch (error) {
+		if(typeof(error) == "string"){
+			vscode.window.showErrorMessage(`Error generating files after rename`);
+			log.info('Error generating files after rename');
+		}
+	}
+	
+	if(ret !== undefined)
+		log.info(ret);
+
+	// delete files
+	let a = pathWithoutExt(oldFile!) + ".*";
+	let files = await vscode.workspace.findFiles(a);
+
+	try {
+		for(let file of files){
+			log.info(`Deleting file: ${file.fsPath}`);		
+			vscode.workspace.fs.delete(file);
+		}
+	} catch (error) {
+		log.info("Error while deleting files after rename command");
+		throw new Error("Error while deleting files after rename command");
+	}
+
+	// add to cache
+	try {
+		let fullNew = getFullpath(newFile!);
+		let fullOld = getFullpath(oldFile!);
+		log.info(`Inserting file into cache: '${fullNew}'`);
+		cacheFiles.insert(vscode.Uri.parse(fullNew));
+		log.info(`Removing file from cache: '${fullOld}'`);
+		cacheFiles.onDelete(vscode.Uri.parse(fullOld));
+	} catch (error) {
+		if(error instanceof Error){
+			log.info(error.message);
+		}
+		else if(typeof(error) === 'string'){
+			log.info(error);
+		}
 	}
 }
 
@@ -156,45 +284,23 @@ async function handleFigure(type: imageType, file: string, template: string | un
 	else{
 		file = find[0].fsPath;	
 	}
-	
-	
-	let executable: string | undefined;
-	let executableArgs: string | undefined;
 
-	// select executable
-	switch(type){
-		case imageType.vector:
-			executable = vscode.workspace.getConfiguration("super-figure").get<string>("vectorFigureEditor");
-			executableArgs = vscode.workspace.getConfiguration("super-figure").get<string>("vectorFigureEditorArgs");
-			break;
-		case imageType.bitmap:
-			executable = vscode.workspace.getConfiguration("super-figure").get<string>("bitmapFigureEditor");
-			executableArgs = vscode.workspace.getConfiguration("super-figure").get<string>("bitmapFigureEditorArgs");
-			break;
-	}
-
+	// touch my friend, what the whole world, and the whole beasts of the nations desire, POWER!
+	
 	// open it
+
+	let ret: string; 
 	try {
-		let cmd: string;
-		if(executable !== undefined && executableArgs !== undefined && executableArgs !== ""){
-			cmd = evaluateCommand(executable + " " + executableArgs, file, executable);
-		}
-		else if(executable !== undefined){
-			cmd = evaluateCommand(executable, file, executable);
-		}
-		else{
-			log.info(`Error, could not launch vector editor`);
-			vscode.window.showErrorMessage(`Error, could not launch vector editor`);
+		ret = launch(type, file);
+	} catch (error) {
+		if (typeof(error) == "string"){
+			vscode.window.showErrorMessage(error);
+			log.info(error);
 			return;
 		}
+	}
 
-		exec(cmd);
-		log.info(`Launching: '${cmd}'`);
-	}
-	catch(error){
-		log.info(`Error while opening file '${file}' for editing with executable '${p.basename(executable!)}'. [ERROR]: ${error}`);
-		vscode.window.showErrorMessage(`Error while opening file '${file}' for editing with executable '${p.basename(executable!)}'. [ERROR]: ${error}`);
-	}
+	log.info(ret!);
 	
 	// save it to cache
 	cacheFiles.insert(vscode.Uri.file(file));

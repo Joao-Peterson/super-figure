@@ -35,6 +35,9 @@ export function activate(context: vscode.ExtensionContext) {
 	disposable = vscode.commands.registerTextEditorCommand('super-figure.editFigure', editFigure.editFigure);
 	context.subscriptions.push(disposable);
 
+	disposable = vscode.commands.registerTextEditorCommand('super-figure.renameFigure', editFigure.renameFigure);
+	context.subscriptions.push(disposable);
+
 	disposable = vscode.commands.registerTextEditorCommand('super-figure.editFigureExtension', editFigure.editFigureExtension);
 	context.subscriptions.push(disposable);
 	
