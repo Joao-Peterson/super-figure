@@ -9,8 +9,6 @@ on:
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
-    outputs:
-      packagename: ${{ steps.package.outputs.packagename }}
     steps:
       - name: "Clone repo"
         uses: "actions/checkout@v3"
@@ -27,7 +25,6 @@ jobs:
         run: "yarn vsce package"
 
       - name: "Package name"
-        id: package
         run: "find *.vsix"
 
       - name: Save package artifact
