@@ -7,7 +7,7 @@ on:
     tags: [ "v.**" ]
   
 jobs:
-  build:
+  build-deploy:
     runs-on: ubuntu-latest
     outputs:
       packagename: ${{ steps.package.outputs.packagename }}
@@ -36,33 +36,9 @@ jobs:
           name: "super-figure.vsix"
           path: "**.vsix"
 
-  deploy-vscode-marketplace:
-    needs: [ build ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Clone repo"
-        uses: "actions/checkout@v3"
-
-      - name: "Get package artifact"
-        uses: "actions/download-artifact@v3"
-        with:
-          name: "super-figure.vsix"
-
       # https://code.visualstudio.com/api/working-with-extensions/publishing-extension
       - name: "Publish package to Vscode Marketplace"
         run: "yarn vsce publish -p ${{ gitea.secrets.VSC_PAT }} -i super-figure.vsix"
-
-  deploy-vscode-openvsx-registry:
-    needs: [ build ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Clone repo"
-        uses: "actions/checkout@v3"
-        
-      - name: "Get package artifact"
-        uses: "actions/download-artifact@v3"
-        with:
-          name: "super-figure.vsix"
 
       # https://github.com/eclipse/openvsx/wiki/Publishing-Extensions#1-create-an-access-token 
       - name: "Publish package to OpenVSX Registry"
