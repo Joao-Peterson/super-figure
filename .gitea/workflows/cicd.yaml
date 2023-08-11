@@ -40,6 +40,9 @@ jobs:
     needs: [ build ]
     runs-on: ubuntu-latest
     steps:
+      - name: "Clone repo"
+        uses: "actions/checkout@v3"
+
       - name: "Get package artifact"
         uses: "actions/download-artifact@v3"
         with:
@@ -53,6 +56,9 @@ jobs:
     needs: [ build ]
     runs-on: ubuntu-latest
     steps:
+      - name: "Clone repo"
+        uses: "actions/checkout@v3"
+        
       - name: "Get package artifact"
         uses: "actions/download-artifact@v3"
         with:
@@ -62,17 +68,17 @@ jobs:
       - name: "Publish package to OpenVSX Registry"
         run: "yarn ovsx publish -p ${{ gitea.secrets.OVSX_PAT }} -i super-figure.vsix"
 
-  release:
-    needs: [ build ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Get package artifact"
-        uses: "actions/download-artifact@v3"
-        with:
-          name: "super-figure.vsix"
+  # release:
+  #   needs: [ build ]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: "Get package artifact"
+  #       uses: "actions/download-artifact@v3"
+  #       with:
+  #         name: "super-figure.vsix"
 
-      - name: "Gitea release"
-        uses: "https://github.com/ncipollo/release-action@v1"
-        with:
-          name: ${{ needs.build.outputs.packagename }}
-          artifacts: "super-figure.vsix"
+  #     - name: "Gitea release"
+  #       uses: "https://github.com/ncipollo/release-action@v1"
+  #       with:
+  #         name: ${{ needs.build.outputs.packagename }}
+  #         artifacts: "super-figure.vsix"
