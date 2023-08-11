@@ -1,0 +1,70 @@
+name: cicd
+
+on:
+  push:
+    branches: [ master ]
+    # only on v.x.x.x versions 
+    tags: [ "v.**" ]
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Clone repo"
+        uses: "actions/checkout@v3"
+
+      - name: "Setup node"
+        uses: "actions/setup-node@v3"
+        with:
+          node-version: 16
+
+      - name: "Build and package"
+        run: "yarn vsce package"
+
+      - name: Save package artifact
+        uses: "actions/upload-artifact@v3"
+        with:
+          name: "package"
+          path: "**.vsix"
+
+  deploy-vscode-marketplace:
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Get package artifact"
+        uses: "actions/download-artifact@v3"
+        with:
+          name: "package"
+
+      # https://code.visualstudio.com/api/working-with-extensions/publishing-extension
+      - name: "Publish package to Vscode Marketplace"
+        run: "yarn vsce publish -p ${{ gitea.secrets.VSC_PAT }} -i $(find *.vsix)"
+
+  deploy-vscode-openvsx-registry:
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Get package artifact"
+        uses: "actions/download-artifact@v3"
+        with:
+          name: "package"
+
+      # https://github.com/eclipse/openvsx/wiki/Publishing-Extensions#1-create-an-access-token 
+      - name: "Publish package to OpenVSX Registry"
+        run: "yarn ovsx publish -p ${{ gitea.secrets.OVSX_PAT }} -i $(find *.vsix)"
+
+  release:
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Get package artifact"
+        uses: "actions/download-artifact@v3"
+        with:
+          name: "package"
+
+      - name: "Gitea release"
+        uses: "https://github.com/ncipollo/release-action@v1"
+        with:
+          artifacts: "*.vsix"
+          body: "New release"
+          tag: ${{ gitea.ref }}
