@@ -28,7 +28,7 @@ jobs:
 
       - name: "Package name"
         id: package
-        run: "packagename=$(find *.vsix)"
+        run: "find *.vsix"
 
       - name: Save package artifact
         uses: "actions/upload-artifact@v3"
