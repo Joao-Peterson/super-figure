@@ -61,11 +61,11 @@ jobs:
       - name: "Get package artifact"
         uses: "actions/download-artifact@v3"
         with:
-          name: "package"
+          name: "super-figure.vsix"
 
       - name: "Gitea release"
         uses: "https://github.com/ncipollo/release-action@v1"
         with:
-          artifacts: "*.vsix"
+          artifacts: "super-figure.vsix"
           body: "New release"
           tag: ${{ gitea.ref }}
