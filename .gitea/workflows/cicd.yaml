@@ -2,7 +2,6 @@ name: cicd
 
 on:
   push:
-    branches: [ master ]
     # only on v.x.x.x versions 
     tags: [ "v.**" ]
   
@@ -19,7 +18,8 @@ jobs:
           node-version: 16
 
       - name: "Build and package"
-        run: "yarn vsce package"
+        run: "yarn install"
+      - run: "yarn vsce package"
 
       - name: Save package artifact
         uses: "actions/upload-artifact@v3"
