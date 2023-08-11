@@ -10,7 +10,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      tag: ${{ steps.gittag.outputs.tag }}
       packagename: ${{ steps.package.outputs.packagename }}
     steps:
       - name: "Clone repo"
@@ -20,10 +19,6 @@ jobs:
         uses: "actions/setup-node@v3"
         with:
           node-version: 16
-
-      - name: "Git tag version"
-        id: gittag
-        run: "tag=$(git describe --tags --abbrev=0)"
 
       - name: "Build"
         run: "yarn install"
@@ -81,4 +76,3 @@ jobs:
         with:
           name: ${{ needs.build.outputs.packagename }}
           artifacts: "super-figure.vsix"
-          tag: ${{ needs.build.outputs.tag }}
