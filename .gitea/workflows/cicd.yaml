@@ -35,11 +35,11 @@ jobs:
 
       # https://code.visualstudio.com/api/working-with-extensions/publishing-extension
       - name: "Publish package to Vscode Marketplace"
-        run: "yarn vsce publish -p ${{ gitea.secrets.VSC_PAT }}"
+        run: yarn vsce publish -p ${{ secrets.VSC_PAT }}
 
       # https://github.com/eclipse/openvsx/wiki/Publishing-Extensions#1-create-an-access-token 
       - name: "Publish package to OpenVSX Registry"
-        run: "yarn ovsx publish -p ${{ gitea.secrets.OVSX_PAT }}"
+        run: yarn ovsx publish -p ${{ secrets.OVSX_PAT }}
 
 
   # release:
