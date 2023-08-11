@@ -9,6 +9,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.gittag.outputs.tag }}
+      packagename: ${{ steps.package.outputs.packagename }}
     steps:
       - name: "Clone repo"
         uses: "actions/checkout@v3"
@@ -18,9 +21,19 @@ jobs:
         with:
           node-version: 16
 
-      - name: "Build and package"
+      - name: "Git tag version"
+        id: gittag
+        run: "tag=$(git describe --tags --abbrev=0)"
+
+      - name: "Build"
         run: "yarn install"
-      - run: "yarn vsce package"
+
+      - name: "Package"
+        run: "yarn vsce package"
+
+      - name: "Package name"
+        id: package
+        run: "packagename=$(find *.vsix)"
 
       - name: Save package artifact
         uses: "actions/upload-artifact@v3"
@@ -66,6 +79,6 @@ jobs:
       - name: "Gitea release"
         uses: "https://github.com/ncipollo/release-action@v1"
         with:
+          name: ${{ needs.build.outputs.packagename }}
           artifacts: "super-figure.vsix"
-          body: "New release"
-          tag: ${{ gitea.ref }}
+          tag: ${{ needs.build.outputs.tag }}
