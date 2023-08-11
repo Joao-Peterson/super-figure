@@ -33,16 +33,16 @@ jobs:
       - name: Save package artifact
         uses: "actions/upload-artifact@v3"
         with:
-          name: "super-figure.vsix"
-          path: "**.vsix"
+          name: ${{ steps.package.outputs.packagename }}
+          path: ${{ steps.package.outputs.packagename }}
 
       # https://code.visualstudio.com/api/working-with-extensions/publishing-extension
       - name: "Publish package to Vscode Marketplace"
-        run: "yarn vsce publish -p ${{ gitea.secrets.VSC_PAT }} -i super-figure.vsix"
+        run: "yarn vsce publish -p ${{ gitea.secrets.VSC_PAT }} -i ${{ steps.package.outputs.packagename }}"
 
       # https://github.com/eclipse/openvsx/wiki/Publishing-Extensions#1-create-an-access-token 
       - name: "Publish package to OpenVSX Registry"
-        run: "yarn ovsx publish -p ${{ gitea.secrets.OVSX_PAT }} -i super-figure.vsix"
+        run: "yarn ovsx publish -p ${{ gitea.secrets.OVSX_PAT }} -i ${{ steps.package.outputs.packagename }}"
 
   # release:
   #   needs: [ build ]
