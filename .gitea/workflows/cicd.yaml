@@ -44,6 +44,7 @@ jobs:
       - name: "Publish package to OpenVSX Registry"
         run: "yarn ovsx publish -p ${{ gitea.secrets.OVSX_PAT }}"
 
+
   # release:
   #   needs: [ build ]
   #   runs-on: ubuntu-latest
