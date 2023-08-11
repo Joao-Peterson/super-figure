@@ -2,8 +2,7 @@ name: cicd
 
 on:
   push:
-    branches:
-      - master
+    branches: [master]
     # only on v.x.x.x versions 
     tags: [ "v.**" ]
   
