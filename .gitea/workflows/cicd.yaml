@@ -24,9 +24,6 @@ jobs:
       - name: "Package"
         run: "yarn vsce package"
 
-      - name: "Package name"
-        run: "find *.vsix"
-
       - name: Save package artifact
         uses: "actions/upload-artifact@v3"
         with:
@@ -47,6 +44,7 @@ jobs:
         with:
           name: "super-figure.vsix"
 
+      - run: ls -la 
       # https://code.visualstudio.com/api/working-with-extensions/publishing-extension
       - name: "Publish package to Vscode Marketplace"
         env:
