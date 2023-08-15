@@ -29,6 +29,9 @@ jobs:
         with:
           name: "super-figure.vsix"
           path: "*.vsix"
+
+      - run: ls -la 
+      - run: find *.vsix
   
   deploy-vscode-markplace:
     runs-on: ubuntu-latest
@@ -45,6 +48,7 @@ jobs:
           name: "super-figure.vsix"
 
       - run: ls -la 
+      - run: ls -la "super-figure.vsix"
       # https://code.visualstudio.com/api/working-with-extensions/publishing-extension
       - name: "Publish package to Vscode Marketplace"
         env:
