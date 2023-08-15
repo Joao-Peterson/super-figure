@@ -27,7 +27,7 @@ jobs:
       - name: Save package artifact
         uses: "actions/upload-artifact@v3"
         with:
-          name: "super-figure.vsix"
+          name: "package"
           path: "super-figure.vsix"
 
       - run: ls -la 
@@ -45,7 +45,7 @@ jobs:
       - name: "Get package artifact"
         uses: "actions/download-artifact@v3"
         with:
-          name: "super-figure.vsix"
+          name: "package"
 
       - run: ls -la 
       - run: ls -la "super-figure.vsix"
