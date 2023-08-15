@@ -2,7 +2,7 @@ name: cicd
 
 on:
   push:
-    branches: [master]
+    # branches: [master]
     # only on v.x.x.x versions 
     tags: [ "v.**" ]
   
@@ -63,7 +63,7 @@ jobs:
         uses: "actions/checkout@v3"
 
       - name: Install vsce
-        run: yarn global add @vscode/vsce
+        run: yarn global add ovsx
 
       - name: "Get package artifact"
         uses: "actions/download-artifact@v3"
