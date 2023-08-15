@@ -46,7 +46,7 @@ jobs:
         uses: "actions/download-artifact@v3"
         with:
           name: "super-figure.vsix"
-          path: .
+          path: "."
 
       - run: ls -la 
       - run: ls -la "super-figure.vsix"
