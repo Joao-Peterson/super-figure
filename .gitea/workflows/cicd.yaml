@@ -22,13 +22,13 @@ jobs:
         run: "yarn install"
 
       - name: "Package"
-        run: "yarn vsce package"
+        run: yarn vsce package -o "super-figure.vsix"
 
       - name: Save package artifact
         uses: "actions/upload-artifact@v3"
         with:
           name: "super-figure.vsix"
-          path: "*.vsix"
+          path: "super-figure.vsix"
 
       - run: ls -la 
       - run: find *.vsix
