@@ -3,17 +3,37 @@ Super figure is a vscode extension that implements integration for Inkscape and 
 
 This extension is inspired by the work of [Gilles Castel](https://castel.dev/post/lecture-notes-2/) and his [Vim plugin](https://github.com/gillescastel/inkscape-figures). May his blog not had a good SEO, i wouldn't have found it and had this idea, unfortunately he passed away in July 2022, so i'm dedicating this work to him as a thanks and to show that even in our passing, our work will continue to inspire others and move knowledge and human kind forwards, because we stand on the shoulder's of giants, rest in peace Gilles.
 
+# Features
+
+This extension enables you to launch image files from Latex or Markdown directly into a external image editor, like Inkscape and Gimp, for that just select the text and open the command palette with `ctrl+shift+p`, then search for `super figure`, a list of commands will be shown.
+
+Some key features:
+* Edit file externally with a simple command just by selecting the filepath!
+* Files will be crated based on a template if they not exist yet
+* Ready to go snippets for Latex and Markdown via commands
+* onSave commands for when extra work is needed after editing the file. Ex: Saving `svg` files to `pdf` and `tex` for latex.
+* Image file renaming
+* Keybindings
+
+>Sample using Latex and Inkscape:
+![](images/latex.gif)
+
+>Sample using Markdown and Gimp:
+![](images/markdown.gif)
+
 # TOC
 - [super-figure](#super-figure)
-- [TOC](#toc)
 - [Features](#features)
+- [TOC](#toc)
 - [Usage](#usage)
+	- [TLDR](#tldr)
 	- [Key bindings](#key-bindings)
 	- [Configuration](#configuration)
 	- [Template file](#template-file)
 	- [On save commands](#on-save-commands)
 		- [Inkscape](#inkscape)
 		- [Gimp](#gimp)
+- [FAQ](#faq)
 - [Commands](#commands)
 	- [Edit Figure (`super-figure.editFigure`)](#edit-figure-super-figureeditfigure)
 	- [Rename figure (`super-figure.renameFigure`)](#rename-figure-super-figurerenamefigure)
@@ -38,25 +58,22 @@ This extension is inspired by the work of [Gilles Castel](https://castel.dev/pos
 	- [1.0.1](#101)
 	- [1.0.0](#100)
 
-# Features
-
-This extension enables you to launch image files from Latex or Markdown directly into a external image editor, like Inkscape and Gimp, for that just select the text and open the command palette with `ctrl+shift+p`, then search for `super figure`, a list of commands will be shown.
-
-Some key features:
-* Edit file externally with a simple command just by selecting the filepath!
-* Files will be crated based on a template if they not exist yet
-* Ready to go snippets for Latex and Markdown via commands
-* onSave commands for when extra work is needed after editing the file. Ex: Saving `svg` files to `pdf` and `tex` for latex.
-* Image file renaming
-* Keybindings
-
-Sample using Latex and Inkscape:
-![](images/latex.gif)
-
-Sample using Markdown and Gimp:
-![](images/markdown.gif)
-
 # Usage
+
+## TLDR
+
+Super figure should fully work out the box if you have Inkscape and Gimp installed on Windows or Linux! 
+
+For common problems go to [the FAQ](#faq).
+
+For detailed configuration info, go to [Configuration](#configuration).
+
+For a quick setup config if your don't work, try this. After installing the extension, press `ctrl+shift+p`, then type/search for `Preferences: Open Settings (UI)`, look on the left for the `Extensions` dropdown, then scroll until you find `Super Figure`, click it, then you need to alter:
+
+* `Bitmap Figure Editor`: The full path to your bitmap edit tool, like Gimp or Photoshop
+* `Vector Figure Editor`: The full path to your vector edit tool, like Inkscape or Corel
+
+In case of more complicated and mysterious problems, just create a new [issue report here](https://github.com/Joao-Peterson/super-figure/issues).
 
 ## Key bindings
 
@@ -155,6 +172,10 @@ Here, everytime Gimp saves the file, the extension listens to the event and exec
 * `images/figure.png`
 
 Credits: [Laurence Gonsalves](https://stackoverflow.com/questions/5794640/how-to-convert-xcf-to-png-using-gimp-from-the-command-line)
+
+# FAQ
+
+
 
 # Commands
 

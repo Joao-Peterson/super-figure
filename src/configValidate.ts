@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import * as p from 'path';
 import * as fs from 'fs';
 import { log } from './log';
 
