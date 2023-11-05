@@ -289,19 +289,18 @@ async function handleFigure(type: imageType, file: string, template: string | un
 	
 	// open it
 
-	let ret: string; 
-	try {
-		ret = launch(type, file);
-	} catch (error) {
-		if (typeof(error) == "string"){
-			vscode.window.showErrorMessage(error);
-			log.info(error);
-			return;
-		}
-	}
+	let success = true;
+	log.info(`Launching: '${file}'`);
+	launch(type, file, (err) => {
+		let msg = "Error launching: " + err;
+		vscode.window.showErrorMessage(msg);
+		log.info(msg);
+		success = false;
+	});
 
-	log.info(ret!);
-	
+	if(!success)
+		return;
+
 	// save it to cache
 	cacheFiles.insert(vscode.Uri.file(file));
 } 

@@ -40,8 +40,8 @@
 			"properties": {
 				"super-figure.vectorFigureEditor": {
 					"type": "string",
-					"default": "/usr/bin/inkscape",
-					"description": "Full path for a vector figure editor executable. Ex: /usr/bin/inkscape"
+					"default": "",
+					"description": "Full path for a vector figure editor executable. Ex: '/usr/bin/inkscape' or 'C:/Program Files/Inkscape/bin/inkscape.exe'"
 				},
 				"super-figure.vectorFigureEditorArgs": {
 					"type": "string",
@@ -65,8 +65,8 @@
 				},
 				"super-figure.bitmapFigureEditor": {
 					"type": "string",
-					"default": "/usr/bin/gimp",
-					"description": "Full path for a bitmap figure editor executable. Ex: /usr/bin/gimp"
+					"default": "",
+					"description": "Full path for a bitmap figure editor executable. Ex: '/usr/bin/gimp' or 'C:/Program Files/GIMP 2/bin/gimp-2.10.exe'"
 				},
 				"super-figure.bitmapFigureEditorArgs": {
 					"type": "string",

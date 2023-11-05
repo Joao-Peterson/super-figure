@@ -41,7 +41,7 @@ export function execCmd(type: imageType, file: string): string{
 	}
 }
 
-export function launch(type: imageType, file: string): string{
+export function launch(type: imageType, file: string, erroCb: ((error: string) => void)){
 	// select executable
 	let executable: string | undefined;
 	let executableArgs: string | undefined;
@@ -61,17 +61,19 @@ export function launch(type: imageType, file: string): string{
 	try {
 		let cmd: string;
 		if(executable !== undefined && executableArgs !== undefined && executableArgs !== ""){
-			cmd = evaluateVars(executable + " " + executableArgs, file, executable);
+			cmd = evaluateVars("${executable}" + " " + executableArgs, file, executable);
 		}
 		else if(executable !== undefined){
-			cmd = evaluateVars(executable, file, executable);
+			cmd = evaluateVars("${executable}", file, executable);
 		}
 		else{
 			throw new Error(`Error, could not launch executable with provided arguments`);
 		}
 	
-		exec(cmd);
-		return `Launching: '${cmd}'`;
+		exec(cmd, (err, stdout, stderr) => {
+			if(err) 
+				erroCb(err.message)
+		});
 	}
 	catch(error){
 		throw new Error(`Error while opening file '${file}' for editing with executable '${p.basename(executable!)}'. [ERROR]: ${error}`);
