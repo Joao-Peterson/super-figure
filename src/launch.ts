@@ -61,10 +61,10 @@ export function launch(type: imageType, file: string, erroCb: ((error: string) =
 	try {
 		let cmd: string;
 		if(executable !== undefined && executableArgs !== undefined && executableArgs !== ""){
-			cmd = evaluateVars("${executable}" + " " + executableArgs, file, executable);
+			cmd = evaluateVars("\"${executable}\"" + " " + executableArgs, file, executable);
 		}
 		else if(executable !== undefined){
-			cmd = evaluateVars("${executable}", file, executable);
+			cmd = evaluateVars("\"${executable}\"", file, executable);
 		}
 		else{
 			throw new Error(`Error, could not launch executable with provided arguments`);

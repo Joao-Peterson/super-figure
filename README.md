@@ -118,18 +118,18 @@ For Inkscape, using the vector edit commands, `svg` files will be created, but l
 A nice feature here is that any text box you include in Inkscape, and has a tex math sequence, `$math$` or `\[math\]`, will be rendered by latex as typeset math text, not embedded in the image, but as a overlay os native text over the image.
 
 ```json
-"super-figure.onVectorFileSave": "${executable} ${file} --export-area-page --export-dpi 300 --export-type=pdf --export-latex --export-filename ${dir}/${basename}.pdf"
+"super-figure.onVectorFileSave": "\"${executable}\" \"${file}\" --export-area-page --export-dpi 300 --export-type=pdf --export-latex --export-filename \"${dir}/${basename}.pdf\""
 ```
 
 For better visualization:
 ```js
 `
-${executable} ${file} 
+"${executable}" "${file}" 
 --export-area-page 
 --export-dpi 300 
 --export-type=pdf 
 --export-latex 
---export-filename ${dir}/${basename}.pdf
+--export-filename "${dir}/${basename}.pdf"
 `
 ```
 
@@ -146,7 +146,7 @@ Credits: [Gilles Castel](https://github.com/gillescastel/inkscape-figures/blob/m
 Gimp also does takes advantage of this, by using the batch preprocessor, the friendly editable `.xcf` files are exported to `png` ones, for insertion into latex and markdown.
 
 ```json
-"super-figure.onBitmapFileSave": "${executable} -n -i -b '(let* ( (filename \"${file}\") (fileout \"${dir}/${basename}.png\") (image 0) (layer 0) ) (set! image (car (gimp-file-load RUN-NONINTERACTIVE filename filename))) (set! layer (car (gimp-image-merge-visible-layers image CLIP-TO-IMAGE))) (gimp-file-save RUN-NONINTERACTIVE image layer fileout fileout) (gimp-image-delete image) (gimp-quit 0))'"
+"super-figure.onBitmapFileSave": "\"${executable}\" -n -i -b '(let* ( (filename \"${file}\") (fileout \"${dir}/${basename}.png\") (image 0) (layer 0) ) (set! image (car (gimp-file-load RUN-NONINTERACTIVE filename filename))) (set! layer (car (gimp-image-merge-visible-layers image CLIP-TO-IMAGE))) (gimp-file-save RUN-NONINTERACTIVE image layer fileout fileout) (gimp-image-delete image) (gimp-quit 0))'"
 ```
 
 For better visualization:

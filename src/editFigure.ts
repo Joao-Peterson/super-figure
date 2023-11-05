@@ -265,7 +265,7 @@ async function handleFigure(type: imageType, file: string, template: string | un
 	}
 	// if no filename
 	if(file.length == 0){
-		vscode.window.showErrorMessage(`Selected filename is null. Try giving it a name`);
+		vscode.window.showErrorMessage(`Selected filename is null. Try typing and selecting an image path`);
 		return;
 	}
 

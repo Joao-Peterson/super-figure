@@ -37,7 +37,7 @@ export async function insertLatexBitmapFigure(editor: vscode.TextEditor, edit: v
 	snippet = snippet + `\\begin{figure}[ht]\n`;
 	snippet = snippet + `\t\\centering\n`;
 	snippet = snippet + `\t\\caption{}\n`;
-	snippet = snippet + `\t\\includegraphics[width=16cm]{${p.basename(selection)}.png}\\\\\n`;
+	snippet = snippet + `\t\\includegraphics[width=16cm]{${selection}.png}\\\\\n`;
 	snippet = snippet + `\t\\label{fig:${p.parse(selection).name}}\n`;
 	snippet = snippet + `\\end{figure}`;
 	
