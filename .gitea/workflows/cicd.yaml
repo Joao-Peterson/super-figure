@@ -27,7 +27,7 @@ jobs:
         uses: "actions/upload-artifact@v3"
         with:
           name: "super-figure.vsix"
-          path: "super-figure.vsix"
+          path: "./super-figure.vsix"
   
   deploy-vscode-markplace:
     runs-on: ubuntu-latest
@@ -50,12 +50,6 @@ jobs:
         env:
           VSC_PAT: ${{ secrets.VSC_PAT }}
         run: vsce publish -p "$VSC_PAT" -i "super-figure.vsix/super-figure.vsix"
-
-      # # https://github.com/eclipse/openvsx/wiki/Publishing-Extensions#1-create-an-access-token 
-      # - name: "Publish package to OpenVSX Registry"
-      #   env:
-      #     OVSX_PAT: ${{ secrets.OVSX_PAT }}
-      #   run: yarn ovsx publish -p "$OVSX_PAT" 
 
   deploy-open-vsx:
     runs-on: ubuntu-latest
