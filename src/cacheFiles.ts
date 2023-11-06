@@ -79,7 +79,7 @@ export class cacheFilesT{
 			// execute onSave
 			let ret: string;
 			try {
-				ret = execCmd(type, path);
+				ret = execCmd(type, path.replaceAll("\\", "/"));
 			} catch (error) {
 				if (typeof(error) == 'string'){
 					vscode.window.showErrorMessage(error);
