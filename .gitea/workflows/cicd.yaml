@@ -15,12 +15,12 @@ jobs:
       - name: "Setup node"
         uses: "actions/setup-node@v3"
         with:
-          node-version: 16
+          node-version: 20
 
-      - name: "Build"
-        run: "yarn install"
+      - name: "Install dependencies"
+        run: yarn install
 
-      - name: "Package"
+      - name: "Compile and package"
         run: yarn vsce package -o "super-figure.vsix"
 
       - name: Save package artifact
