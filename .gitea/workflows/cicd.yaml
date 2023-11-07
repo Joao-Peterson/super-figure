@@ -27,7 +27,7 @@ jobs:
         uses: "actions/upload-artifact@v3"
         with:
           name: "super-figure.vsix"
-          path: "./super-figure.vsix"
+          path: "super-figure.vsix"
   
   deploy-vscode-markplace:
     runs-on: node-20
@@ -59,7 +59,7 @@ jobs:
       - name: "Clone repo"
         uses: "actions/checkout@v3"
 
-      - name: Install vsce
+      - name: Install ovsx
         run: yarn global add ovsx
 
       - name: "Get package artifact"
@@ -71,7 +71,7 @@ jobs:
       - name: "Publish package to OpenVSX Registry"
         env:
           OVSX_PAT: ${{ secrets.OVSX_PAT }}
-        run: yarn ovsx publish -p "$OVSX_PAT" -i "super-figure.vsix/super-figure.vsix"
+        run: ovsx publish -p "$OVSX_PAT" -i "super-figure.vsix/super-figure.vsix"
 
 
   # release:
