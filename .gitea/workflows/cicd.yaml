@@ -7,7 +7,7 @@ on:
   
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: node-20
     steps:
       - name: "Clone repo"
         uses: "actions/checkout@v3"
@@ -30,7 +30,7 @@ jobs:
           path: "./super-figure.vsix"
   
   deploy-vscode-markplace:
-    runs-on: ubuntu-latest
+    runs-on: node-20
     needs: 
       - build
     steps:
@@ -52,7 +52,7 @@ jobs:
         run: vsce publish -p "$VSC_PAT" -i "super-figure.vsix/super-figure.vsix"
 
   deploy-open-vsx:
-    runs-on: ubuntu-latest
+    runs-on: node-20
     needs: 
       - build
     steps:
