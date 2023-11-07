@@ -20,8 +20,11 @@ jobs:
       - name: "Install dependencies"
         run: yarn install
 
+      - name: Install vsce
+        run: yarn global add @vscode/vsce
+
       - name: "Compile and package"
-        run: yarn vsce package -o "super-figure.vsix"
+        run: vsce package -o "super-figure.vsix"
 
       - name: Save package artifact
         uses: "actions/upload-artifact@v3"

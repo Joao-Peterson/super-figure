@@ -54,6 +54,7 @@ Some key features:
 - [Known Issues](#known-issues)
 - [Planned Features](#planned-features)
 - [Release Notes](#release-notes)
+	- [1.0.3](#103)
 	- [1.0.2](#102)
 	- [1.0.1](#101)
 	- [1.0.0](#100)
@@ -466,6 +467,10 @@ The `Args` configurations and `onSave` commands, offer variables support, you ca
 * Hability to paste and drop files directly into vscode and generate the snippets accordingly, similar to the extension [Paste Image](https://github.com/mushanshitiancai/vscode-paste-image.git).
 
 # Release Notes
+
+## 1.0.3
+
+Bug fixes for `onSave` actions on windows
 
 ## 1.0.2
 
