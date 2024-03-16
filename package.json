@@ -2,8 +2,8 @@
 	"name": "super-figure",
 	"publisher": "Peterson",
 	"displayName": "Super Figure",
-	"description": "Easily create/edit/paste vector and bitmap images into latex or markdown for ease note taking and writing. With out of the box support for Inkscape and Gimp",
-	"version": "1.0.3",
+	"description": "Easily create/edit/paste vector and bitmap images into latex, typst or markdown for ease note taking and writing. With out of the box support for Inkscape and Gimp",
+	"version": "1.0.4",
 	"icon": "images/icon.png",
 	"license": "SEE LICENSE IN LICENSE",
 	"homepage": "https://github.com/Joao-Peterson/super-figure",
@@ -24,6 +24,7 @@
 		"latex",
 		"markdown",
 		"inkscape",
+		"typst",
 		"gimp",
 		"image paste",
 		"note taking"
@@ -31,7 +32,8 @@
 	"activationEvents": [
 		"onLanguage:markdown",
 		"onLanguage:tex",
-		"onLanguage:latex"
+		"onLanguage:latex",
+		"onLanguage:typst"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -145,6 +147,16 @@
 				"command": "super-figure.insertMarkdownBitmapFigure",
 				"category": "Super Figure",
 				"title": "Insert bitmap figure as markdown snippet"
+			},
+			{
+				"command": "super-figure.insertTypstVectorFigure",
+				"category": "Super Figure",
+				"title": "Insert vector figure as typst snippet"
+			},
+			{
+				"command": "super-figure.insertTypstBitmapFigure",
+				"category": "Super Figure",
+				"title": "Insert bitmap figure as typst snippet"
 			}
 		],
 		"menus": {
@@ -168,6 +180,14 @@
 				{
 					"command": "super-figure.insertMarkdownBitmapFigure",
 					"when": "editorLangId == markdown"
+				},
+				{
+					"command": "super-figure.insertTypstVectorFigure",
+					"when": "editorLangId == typst"
+				},
+				{
+					"command": "super-figure.insertTypstBitmapFigure",
+					"when": "editorLangId == typst"
 				}
 			]
 		},
@@ -196,6 +216,16 @@
 				"command": "super-figure.insertMarkdownBitmapFigure",
 				"key": "ctrl+alt+b",
 				"when": "editorLangId == markdown && editorTextFocus"
+			},
+			{
+				"command": "super-figure.insertTypstVectorFigure",
+				"key": "ctrl+alt+v",
+				"when": "editorLangId == typst && editorTextFocus"
+			},
+			{
+				"command": "super-figure.insertTypstBitmapFigure",
+				"key": "ctrl+alt+b",
+				"when": "editorLangId == typst && editorTextFocus"
 			}
 		]
 	},

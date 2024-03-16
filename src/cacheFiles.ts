@@ -2,9 +2,7 @@ import * as vscode from 'vscode';
 import * as p from 'path';
 import * as fs from 'fs';
 import * as chokidar from 'chokidar';
-import { exec } from 'child_process';
 import { log } from './log';
-import { evaluateVars } from './vars';
 import { execCmd, imageType } from './launch';
 
 export let cacheFiles: cacheFilesT;

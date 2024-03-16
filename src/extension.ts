@@ -1,10 +1,12 @@
 import * as vscode from 'vscode';
-import { cacheFiles, cacheFilesInit } from './cacheFiles';
+import { cacheFilesInit } from './cacheFiles';
 import { validateConfig } from './configValidate';
 import * as editFigure from './editFigure';
-import * as insertSnippet from './insertSnippet';
 import { log, logInit } from './log';
 import { generateDefaultFiles } from './defaultFiles';
+import { LatexSnippets } from './snippets/latex';
+import { MarkdownSnippets } from './snippets/markdown';
+import { TypstSnippets } from './snippets/typst';
 
 export function activate(context: vscode.ExtensionContext) {
 	
@@ -32,6 +34,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 	let disposable: vscode.Disposable;
 
+	// edits
+
 	disposable = vscode.commands.registerTextEditorCommand('super-figure.editFigure', editFigure.editFigure);
 	context.subscriptions.push(disposable);
 
@@ -47,22 +51,32 @@ export function activate(context: vscode.ExtensionContext) {
 	disposable = vscode.commands.registerTextEditorCommand('super-figure.editBitmap', editFigure.editBitmap);
 	context.subscriptions.push(disposable);
 
-	disposable = vscode.commands.registerTextEditorCommand('super-figure.insertLatexVectorFigure', insertSnippet.insertLatexVectorFigure);
+	// latex snippets
+	
+	disposable = vscode.commands.registerTextEditorCommand('super-figure.insertLatexVectorFigure', LatexSnippets.insertVectorFigure);
+	context.subscriptions.push(disposable);
+	
+	disposable = vscode.commands.registerTextEditorCommand('super-figure.insertLatexBitmapFigure', LatexSnippets.insertBitmapFigure);
+	context.subscriptions.push(disposable);
+	
+	disposable = vscode.commands.registerTextEditorCommand('super-figure.insertLatexPre', LatexSnippets.insertPre);
 	context.subscriptions.push(disposable);
 
-	disposable = vscode.commands.registerTextEditorCommand('super-figure.insertLatexBitmapFigure', insertSnippet.insertLatexBitmapFigure);
+	// typst snippets
+
+	disposable = vscode.commands.registerTextEditorCommand('super-figure.insertTypstVectorFigure', TypstSnippets.insertVectorFigure);
 	context.subscriptions.push(disposable);
 
-	disposable = vscode.commands.registerTextEditorCommand('super-figure.insertLatexPre', insertSnippet.insertLatexPre);
+	disposable = vscode.commands.registerTextEditorCommand('super-figure.insertTypstBitmapFigure', TypstSnippets.insertBitmapFigure);
 	context.subscriptions.push(disposable);
 
-	disposable = vscode.commands.registerTextEditorCommand('super-figure.insertMarkdownVectorFigure', insertSnippet.insertMarkdownVectorFigure);
+	// markdown snippets
+
+	disposable = vscode.commands.registerTextEditorCommand('super-figure.insertMarkdownVectorFigure', MarkdownSnippets.insertVectorFigure);
 	context.subscriptions.push(disposable);
 
-	disposable = vscode.commands.registerTextEditorCommand('super-figure.insertMarkdownBitmapFigure', insertSnippet.insertMarkdownBitmapFigure);
+	disposable = vscode.commands.registerTextEditorCommand('super-figure.insertMarkdownBitmapFigure', MarkdownSnippets.insertBitmapFigure);
 	context.subscriptions.push(disposable);
 }
 
-export function deactivate(){
-
-}
+export function deactivate(){}

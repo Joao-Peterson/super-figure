@@ -2,15 +2,11 @@ import * as vscode from 'vscode';
 import * as p from 'path';
 import * as fs from 'fs';
 import { log } from './log';
-import { exec } from 'child_process';
 import * as os from 'os';
 import { cacheFiles } from './cacheFiles';
-import { evaluateVars } from './vars';
 import { defaultDir } from './defaultFiles';
-import { findFileWorkspace, getFullpath, getPathRelativeToWorkspace, pathWithoutExt } from './pathUtils';
+import { findFileWorkspace, getFullpath, pathWithoutExt } from './pathUtils';
 import { execCmd, getTypeByExtension, imageType, launch } from './launch';
-import path = require('path');
-import { join } from 'path';
 
 // edit any figure, dropdown pick selection
 export async function editFigure(editor: vscode.TextEditor, edit: vscode.TextEditorEdit, args: any[]){
@@ -18,15 +14,15 @@ export async function editFigure(editor: vscode.TextEditor, edit: vscode.TextEdi
 		[
 			{
 				label: "Edit figure based on file extension.",
-				detail: "File selection: (figure.svg)"
+				detail: "File selection: \"figure.svg\""
 			},
 			{
 				label: "Edit Vector figure.",
-				detail: "File selection: (figure)"
+				detail: "File selection: \"figure\""
 			},
 			{
 				label: "Edit Bitmap figure.",
-				detail: "File selection: (figure)"
+				detail: "File selection: \"figure\""
 			}
 		],
 		{
@@ -52,6 +48,7 @@ export async function editFigure(editor: vscode.TextEditor, edit: vscode.TextEdi
 	}
 }
 
+// rename figure
 export async function renameFigure(editor: vscode.TextEditor, edit: vscode.TextEditorEdit, args: any[]){
 	// if no folder opened
 	if(vscode.workspace.workspaceFolders === undefined){
@@ -186,9 +183,17 @@ export async function editVector(editor: vscode.TextEditor, edit: vscode.TextEdi
 	let template = vscode.workspace.getConfiguration("super-figure").get<string>("vectorTemplate");
 	if(template === undefined) return;
 	
-	log.info(`Editing vector figure: ${editor.document.getText(editor.selection)}`);
+	
+	let file = editor.document.getText(editor.selection);
+	log.info(`Editing vector figure: ${file}`);
 
-	let file = editor.document.getText(editor.selection) + p.extname(template);
+	// if no filename
+	if(file.length == 0){
+		vscode.window.showErrorMessage(`Selected filename is null. Try giving it a name`);
+		return;
+	}
+
+	file = file + p.extname(template);
 	handleFigure(imageType.vector, file, template);
 }
 
@@ -197,9 +202,16 @@ export async function editBitmap(editor: vscode.TextEditor, edit: vscode.TextEdi
 	let template = vscode.workspace.getConfiguration("super-figure").get<string>("bitmapTemplate");
 	if(template === undefined) return;
 	
-	log.info(`Editing bitmap figure: ${editor.document.getText(editor.selection)}`);
+	let file = editor.document.getText(editor.selection);
+	log.info(`Editing bitmap figure: ${file}`);
 
-	let file = editor.document.getText(editor.selection) + p.extname(template);
+	// if no filename
+	if(file.length == 0){
+		vscode.window.showErrorMessage(`Selected filename is null. Try giving it a name`);
+		return;
+	}
+
+	file = file + p.extname(template);
 	handleFigure(imageType.bitmap, file, template);
 }
 
@@ -207,6 +219,12 @@ export async function editBitmap(editor: vscode.TextEditor, edit: vscode.TextEdi
 export async function editFigureExtension(editor: vscode.TextEditor, edit: vscode.TextEditorEdit, args: any[]){	
 	// grab selection
 	let file = editor.document.getText(editor.selection);
+
+	// if no filename
+	if(file.length == 0){
+		vscode.window.showErrorMessage(`Selected filename is null. Try giving it a name`);
+		return;
+	}
 
 	// check filetype
 	let img: imageType | null;

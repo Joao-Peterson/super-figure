@@ -27,15 +27,18 @@ export function execCmd(type: imageType, file: string): string{
 			break;
 	}
 
+	// empty commands
+	if(cmd == undefined || cmd.length == 0)
+		return `No command 'onSave' was setup. File: '${file}'`;
+
+	// empty exe
+	if(exe == undefined || exe.length == 0)
+		return `No executable for the file extension type was setup. File: '${file}'`;
+	
 	try {
-		if(cmd !== undefined && cmd !== "" && exe !== undefined){
-			cmd = evaluateVars(cmd, file, exe);
-			exec(cmd);				
-			return `Executing command 'onSave': '${cmd}' for file: '${file}'`;
-		}
-		else{
-			return `No command 'onSave' was setup. File: '${file}'`;
-		}
+		cmd = evaluateVars(cmd, file, exe);
+		exec(cmd);				
+		return `Executing command 'onSave': '${cmd}' for file: '${file}'`;
 	} catch (error) {
 		throw new Error(`Error while executing command '${cmd}' for file '${file}'. [ERROR]: ${error}`);
 	}

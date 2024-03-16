@@ -1,16 +1,16 @@
 # super-figure
-Super figure is a vscode extension that implements integration for Inkscape and Gimp as means to quickly launch and edit figures and see the results is your Latex or Markdown files.
+Super figure is a vscode extension that implements integration for Inkscape, Gimp and other image editors as means to quickly launch and edit figures and see the results is your Latex, Typst and Markdown files.
 
 This extension is inspired by the work of [Gilles Castel](https://castel.dev/post/lecture-notes-2/) and his [Vim plugin](https://github.com/gillescastel/inkscape-figures). May his blog not had a good SEO, i wouldn't have found it and had this idea, unfortunately he passed away in July 2022, so i'm dedicating this work to him as a thanks and to show that even in our passing, our work will continue to inspire others and move knowledge and human kind forwards, because we stand on the shoulder's of giants, rest in peace Gilles.
 
 # Features
 
-This extension enables you to launch image files from Latex or Markdown directly into a external image editor, like Inkscape and Gimp, for that just select the text and open the command palette with `ctrl+shift+p`, then search for `super figure`, a list of commands will be shown.
+This extension enables you to launch image files from Latex, Typst or Markdown directly into a external image editor, like Inkscape or Gimp, for that just select the text of the image filename, open the command palette with `ctrl+shift+p`, then search for `super figure`, a list of commands will be shown.
 
 Some key features:
 * Edit file externally with a simple command just by selecting the filepath!
-* Files will be crated based on a template if they not exist yet
-* Ready to go snippets for Latex and Markdown via commands
+* Files will be created based on a template if they not exist yet
+* Ready to go snippets for Latex, Typst and Markdown via commands
 * onSave commands for when extra work is needed after editing the file. Ex: Saving `svg` files to `pdf` and `tex` for latex.
 * Image file renaming
 * Keybindings
@@ -45,6 +45,8 @@ Some key features:
 	- [Insert Latex Preamble (`super-figure.insertLatexPre`)](#insert-latex-preamble-super-figureinsertlatexpre)
 	- [Insert vector figure as markdown snippet (`super-figure.insertMarkdownVectorFigure`)](#insert-vector-figure-as-markdown-snippet-super-figureinsertmarkdownvectorfigure)
 	- [Insert bitmap figure as markdown snippet (`super-figure.insertMarkdownBitmapFigure`)](#insert-bitmap-figure-as-markdown-snippet-super-figureinsertmarkdownbitmapfigure)
+	- [Insert vector figure as typst snippet (`super-figure.insertTypstVectorFigure`)](#insert-vector-figure-as-typst-snippet-super-figureinserttypstvectorfigure)
+	- [Insert bitmap figure as typst snippet (`super-figure.insertTypstBitmapFigure`)](#insert-bitmap-figure-as-typst-snippet-super-figureinserttypstbitmapfigure)
 - [Requirements](#requirements)
 	- [Windows](#windows)
 	- [Archlinux (and based systems)](#archlinux-and-based-systems)
@@ -54,6 +56,7 @@ Some key features:
 - [Known Issues](#known-issues)
 - [Planned Features](#planned-features)
 - [Release Notes](#release-notes)
+	- [1.0.4](#104)
 	- [1.0.3](#103)
 	- [1.0.2](#102)
 	- [1.0.1](#101)
@@ -309,7 +312,7 @@ Generated snippet:
 
 ## Insert bitmap figure as markdown snippet (`super-figure.insertMarkdownBitmapFigure`)
 
-After selecting the filename in the editor, **without the file extension**, the file type will be assumed as the same as the template set in the `super-figure.vectorTemplate` configuration, a snippet will be inserted, and the file will be opened.
+After selecting the filename in the editor, **without the file extension**, the file type will be assumed as the same as the template set in the `super-figure.bitmapTemplate` configuration, a snippet will be inserted, and the file will be opened.
 
 If the file doesn't exist, you will be prompted to use a suggested file template, after confirmation, the file will be opened normally.
 
@@ -321,6 +324,38 @@ images/myBitmapImage
 Generated snippet:
 ```markdown
 ![myBitmapImage](images/myBitmapImage.png)
+```
+
+## Insert vector figure as typst snippet (`super-figure.insertTypstVectorFigure`)
+
+After selecting the filename in the editor, **without the file extension**, the file type will be assumed as the same as the template set in the `super-figure.vectorTemplate` configuration, a snippet will be inserted, and the file will be opened.
+
+If the file doesn't exist, you will be prompted to use a suggested file template, after confirmation, the file will be opened normally.
+
+Selection example:
+```c
+images/myVectorImage
+```
+
+Generated snippet:
+```c
+#image("images/myVectorImage.svg")
+```
+
+## Insert bitmap figure as typst snippet (`super-figure.insertTypstBitmapFigure`)
+
+After selecting the filename in the editor, **without the file extension**, the file type will be assumed as the same as the template set in the `super-figure.bitmapTemplate` configuration, a snippet will be inserted, and the file will be opened.
+
+If the file doesn't exist, you will be prompted to use a suggested file template, after confirmation, the file will be opened normally.
+
+Selection example:
+```c
+images/myBitmapImage
+```
+
+Generated snippet:
+```c
+#image("images/myBitmapImage.png")
 ```
 
 # Requirements
@@ -467,6 +502,12 @@ The `Args` configurations and `onSave` commands, offer variables support, you ca
 * Hability to paste and drop files directly into vscode and generate the snippets accordingly, similar to the extension [Paste Image](https://github.com/mushanshitiancai/vscode-paste-image.git).
 
 # Release Notes
+
+## 1.0.4
+
+Small refactor and improvements. 
+
+Added Typst support!
 
 ## 1.0.3
 
