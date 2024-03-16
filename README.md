@@ -3,6 +3,10 @@ Super figure is a vscode extension that implements integration for Inkscape, Gim
 
 This extension is inspired by the work of [Gilles Castel](https://castel.dev/post/lecture-notes-2/) and his [Vim plugin](https://github.com/gillescastel/inkscape-figures). May his blog not had a good SEO, i wouldn't have found it and had this idea, unfortunately he passed away in July 2022, so i'm dedicating this work to him as a thanks and to show that even in our passing, our work will continue to inspire others and move knowledge and human kind forwards, because we stand on the shoulder's of giants, rest in peace Gilles.
 
+Install on:
+* [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=peterson.super-figure)
+* [OpenVSX Regsitry](https://open-vsx.org/extension/Peterson/super-figure)
+
 # Features
 
 This extension enables you to launch image files from Latex, Typst or Markdown directly into a external image editor, like Inkscape or Gimp, for that just select the text of the image filename, open the command palette with `ctrl+shift+p`, then search for `super figure`, a list of commands will be shown.
